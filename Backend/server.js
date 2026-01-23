@@ -2,16 +2,15 @@ import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import mongoose from "mongoose";
+import threadRoutes from "./routes/thread.js";
+
 const app = express();
 const PORT = 8080;
 
 app.use(express.json());
 app.use(cors());
 
-app.listen(PORT, () => {
-  console.log(`server running on ${PORT}`);
-  connectDB();
-});
+//  DB connect function FIRST
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
@@ -21,7 +20,9 @@ const connectDB = async () => {
   }
 };
 
-app.post("/test", async (req, res) => {
+app.use("/api", threadRoutes);
+
+app.post("/api/chat", async (req, res) => {
   const options = {
     method: "POST",
     headers: {
@@ -45,10 +46,14 @@ app.post("/test", async (req, res) => {
       options
     );
     const data = await response.json();
-    console.log(data);
     res.send(data);
   } catch (err) {
     console.log(err);
     res.status(500).send("Error occurred");
   }
+});
+
+app.listen(PORT, () => {
+  console.log(`server running on ${PORT}`);
+  connectDB();
 });
