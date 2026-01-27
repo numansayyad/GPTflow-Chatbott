@@ -9,17 +9,17 @@ function ChatWindow() {
           GPTflow <i className="fa-solid fa-chevron-down"></i>
         </span>
         <div className="userIconDiv">
-          <span>
+          <span className="userIcon">
             <i className="fa-solid fa-user"></i>
           </span>
         </div>
       </div>
 
-      <Chat></Chat>
+      <Chat />
 
       <div className="chatInput">
-        <div className="userInput">
-          <input placeholder="Ask anything"></input>
+        <div className="inputBox">
+          <input placeholder="Ask anything" />
           <div id="submit">
             <i className="fa-solid fa-paper-plane"></i>
           </div>

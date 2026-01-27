@@ -1,9 +1,7 @@
 import "./Chat.css";
 
-
-function Chat(){
-    return(
-        <></>
-    )
+function Chat() {
+  return <div className="chat"></div>;
 }
+
 export default Chat;
