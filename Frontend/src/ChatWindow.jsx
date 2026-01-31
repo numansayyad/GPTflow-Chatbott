@@ -2,33 +2,36 @@ import "./ChatWindow.css";
 import Chat from "./chat.jsx";
 import { MyContext } from "./MyContext.jsx";
 import { useContext } from "react";
+
 function ChatWindow() {
 
-const { prompt, setPrompt, reply, setReply, currThreadId } = useContext(MyContext);
+  const { prompt, setPrompt, reply, setReply, currThreadId } =
+    useContext(MyContext);
 
-const getReply = async () => {
-  const options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: {
-      message: prompt,
-      threadId: currThreadId
+  const getReply = async () => {
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: prompt,
+        threadId: currThreadId,
+      }),
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/chat",
+        options
+      );
+      const res = await response.json();
+      console.log(res);
+      setReply(res.reply);
+    } catch (err) {
+      console.log(err);
     }
   };
-
-  try {
-    await fetch("http://localhost:8080/api/chat");
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-const providerValues = {
-  prompt, setPrompt,
-  reply, setReply,
-};
 
   return (
     <div className="chatWindow">
@@ -47,13 +50,17 @@ const providerValues = {
 
       <div className="chatInput">
         <div className="inputBox">
-          <input placeholder="Ask anything"
-          value={prompt}
-onChange={(e) => setPrompt(e.target.value)}
-
-          
-          
+          <input
+            placeholder="Ask anything"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                getReply();
+              }
+            }}
           />
+
           <div id="submit" onClick={getReply}>
             <i className="fa-solid fa-paper-plane"></i>
           </div>
